@@ -16,8 +16,10 @@ GoGACon is a lightweight, zero-dependency Go library designed to simplify config
 
 ## Installation
 
-go get github.com/Galdoba/gogacon
+    
+    go get github.com/Galdoba/gogacon
 
+    
 ## Quick Start
 
 ### 1. Implement Serializer Interface
@@ -82,60 +84,66 @@ Methods:
   Loads configuration from specified path or default location
 
 ### Serializer Interface
-go
-type Serializer interface {
-    Marshal() ([]byte, error)
-    Unmarshal(data []byte) error
-}
+    go
+    type Serializer interface {
+        Marshal() ([]byte, error)
+        Unmarshal(data []byte) error
+    }
 Implement this interface to support any configuration format (JSON, YAML, TOML, etc.)
 
 ### Error Handling
 Errors are returned as ConfigError type with rich context:
-go
-type ConfigError struct {
-    Operation string // Operation being performed
-    Path      string // Configuration file path
-    Err       error  // Underlying error
-}
 
-Example error message:  
-config error: unmarshal config "/home/user/.config/myapp/default.conf": invalid character '}'
+    go
+    type ConfigError struct {
+        Operation string // Operation being performed
+        Path      string // Configuration file path
+        Err       error  // Underlying error
+    }
+
+Example error message:
+
+    config error: unmarshal config "/home/user/.config/myapp/default.conf": invalid character '}'
 
 ## Advanced Usage
 
 ### Custom Configuration Path
-go
-// Load from specific location
-err := manager.LoadConfig("/etc/myapp/special.conf", &config)
+
+    go
+    // Load from specific location
+    err := manager.LoadConfig("/etc/myapp/special.conf", &config)
 
 ### Handling Errors
-go
-if err := manager.LoadConfig("", &config); err != nil {
-    var cfgErr gogacon.ConfigError
-    if errors.As(err, &cfgErr) {
-        fmt.Printf("Operation: %s\nPath: %s\nError: %v\n", 
-            cfgErr.Operation, cfgErr.Path, cfgErr.Err)
-    } else {
-        fmt.Printf("Unexpected error: %v\n", err)
+
+    go
+    if err := manager.LoadConfig("", &config); err != nil {
+        var cfgErr gogacon.ConfigError
+        if errors.As(err, &cfgErr) {
+            fmt.Printf("Operation: %s\nPath: %s\nError: %v\n", 
+                cfgErr.Operation, cfgErr.Path, cfgErr.Err)
+        } else {
+            fmt.Printf("Unexpected error: %v\n", err)
+        }
+        os.Exit(1)
     }
-    os.Exit(1)
-}
 
 ### Implementing Custom Serializers
-go
-// JSON Serializer Example
-type JSONConfig struct {
-    Data map[string]interface{}
-}
 
-func (j *JSONConfig) Marshal() ([]byte, error) {
-    return json.MarshalIndent(j.Data, "", "  ")
-}
-
-func (j *JSONConfig) Unmarshal(data []byte) error {
-    return json.Unmarshal(data, &j.Data)
-}
-
+    go
+    // JSON Serializer Example
+    type JSONConfig struct {
+        Data map[string]interface{}
+    }
+    
+    
+    func (j *JSONConfig) Marshal() ([]byte, error) {
+        return json.MarshalIndent(j.Data, "", "  ")
+    }
+    
+    func (j *JSONConfig) Unmarshal(data []byte) error {
+        return json.Unmarshal(data, &j.Data)
+    }
+    
 
 ## Error Reference
 
