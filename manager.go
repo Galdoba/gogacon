@@ -74,13 +74,13 @@ func (cm *ConfigManager) LoadConfig(filePath string, target Serializer) error {
 		}
 	}
 
-	bt, err := os.ReadFile(cm.filePath)
+	bt, err := os.ReadFile(filePath)
 	if err != nil {
-		return NewError("read config", cm.filePath, err)
+		return NewError("read config", filePath, err)
 	}
 
 	if err = target.Unmarshal(bt); err != nil {
-		return NewError("unmarshal config", cm.filePath, err)
+		return NewError("unmarshal config", filePath, err)
 	}
 	cm.filePath = filePath
 	return nil
