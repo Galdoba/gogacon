@@ -64,14 +64,10 @@ func (cm *ConfigManager) ensureConfigFile(path string) error {
 // Creates configuration file with default values at default filepath
 func (cm *ConfigManager) LoadConfig(filePath string, target Serializer) error {
 	if filePath == "" {
-		path, err := cm.buildPath()
-		if err != nil {
-			return NewError("load default config", filePath, fmt.Errorf("build path failed: %v", err))
-		}
-		filePath = path
-		if err := cm.ensureConfigFile(filePath); err != nil {
-			return err
-		}
+		return fmt.Errorf("no path provided")
+	}
+	if err := cm.ensureConfigFile(filePath); err != nil {
+		return err
 	}
 
 	bt, err := os.ReadFile(filePath)
